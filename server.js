@@ -68,7 +68,7 @@ const updateEmployeeQuestions = [
     {
         type: 'list',
         message: "Which employee's role do you want to update?",
-        choices: ['Hope McCrea', 'Mel Monroe', 'Jack Sheridan', 'Charmaine Roberts', 'Vernon Miller', 'Dan Brady', 'Cameron Hayek', 'Joey Barnes'],
+        choices: ['Hope McCrea', 'Mel Monroe', 'Jack Sheridan', 'Charmaine Roberts', 'Vernon Mullins', 'Dan Brady', 'Cameron Hayek', 'Joey Barnes'],
         name: 'update'
     },
     {
