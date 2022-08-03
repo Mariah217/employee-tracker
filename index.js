@@ -70,6 +70,9 @@ function menu() {
             else if (response.menu === "View All Departments") {
                 viewDepartments() 
             } 
+            else if (response.menu === "View All Roles") {
+                viewRoles() 
+            } 
             else if (response.menu === "Add Employee") {
                 addEmployee()
             }
@@ -84,7 +87,17 @@ function viewDepartments(){
     })
 }
 
+//function to add a dept
+
 //function to view all roles
+function viewRoles(){
+    db.query("select * from role", (err,data)=>{
+        console.table(data)
+        menu()
+    })
+}
+
+//function to add a role
 
 //function to view all employees
 function viewEmployees() {
@@ -107,10 +120,6 @@ function viewEmployees() {
         menu()
     })
 }
-
-//function to add a dept
-
-//function to add a role
 
 //function to add employee
 function addEmployee() {
