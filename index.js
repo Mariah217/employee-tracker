@@ -16,40 +16,6 @@ const menuQuestion = [
     },
 ]
 
-// const addRoleQuestions = [
-//     {
-//         type: 'input',
-//         message: 'What is the name of the role?',
-//         name: 'addRole'
-//     },
-//     {
-//         type: 'input',
-//         message: 'What is the salary of the role?',
-//         name: 'addSalary'
-//     },
-//     {
-//         type: 'list',
-//         message: 'Which department does this role belong to?',
-//         choices: ['Engineering', 'Finance', 'Legal', 'Sales', 'Service',],
-//         name: 'addDeptRole'
-//     },
-// ]
-
-// const updateEmployeeQuestions = [
-//     {
-//         type: 'list',
-//         message: "Which employee's role do you want to update?",
-//         choices: ['Hope McCrea', 'Mel Monroe', 'Jack Sheridan', 'Charmaine Roberts', 'Vernon Mullins', 'Dan Brady', 'Cameron Hayek', 'Joey Barnes'],
-//         name: 'update'
-//     },
-//     {
-//         type: 'list',
-//         message: "Which role do you want to assign the selected employee?",
-//         choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer', 'Customer Service'],
-//         name: 'updateRole'
-//     },
-// ]
-
 //function to initiate questions
 function menu() {
     inquirer
@@ -81,7 +47,8 @@ function menu() {
 }
 
 //function to view all dept's
-function viewDepartments() { //need to fix, table shows 20 dept's and there is only 5
+function viewDepartments() { //need to fix, table shows 20 dept's and there is only 5???
+
     db.query("select * from department", (err, data) => {
         console.table(data)
         menu()
@@ -100,7 +67,7 @@ function addDepartment() {
         ]
         inquirer.prompt(addADeptQuestion)
             .then(response => {
-                const parameters = [response.name]
+                const parameters = [response.addDept]
                 db.query("INSERT INTO department (name) VALUES(?)", parameters, (err, data) => {
                     viewDepartments()
                 })
@@ -117,9 +84,34 @@ function viewRoles() {
 }
 
 //function to add a role
-function addRole(){
-
+function addRole() { //prompts questions but does not add
+    const addRoleQuestions = [
+        {
+            type: 'input',
+            message: 'What is the name of the role?',
+            name: 'addRole'
+        },
+        {
+            type: 'input',
+            message: 'What is the salary of the role?',
+            name: 'addSalary'
+        },
+        {
+            type: 'list',
+            message: 'Which department does this role belong to?',
+            choices: ['Engineering', 'Finance', 'Legal', 'Sales', 'Service'],
+            name: 'addDeptRole'
+        },
+    ]
+    inquirer.prompt(addRoleQuestions)
+        .then(response => {
+            const parameters = [response.addRole, response.addSalary, response.addDeptRole]
+            db.query("INSERT INTO role (addRole, addSalary, addDeptRole) VALUES(?,?,?)", parameters, (err, data) => {
+                viewRoles()
+            })
+        })
 }
+
 //function to view all employees
 function viewEmployees() {
     db.query(`
@@ -183,6 +175,19 @@ function addEmployee() {
 }
 
 //function to update an employee
-function updateRole(){
-    
+function updateRole() {
+    const updateEmployeeQuestions = [
+        {
+            type: 'list',
+            message: "Which employee's role do you want to update?",
+            choices: ['Hope McCrea', 'Mel Monroe', 'Jack Sheridan', 'Charmaine Roberts', 'Vernon Mullins', 'Dan Brady', 'Cameron Hayek', 'Joey Barnes'],
+            name: 'update'
+        },
+        {
+            type: 'list',
+            message: "Which role do you want to assign the selected employee?",
+            choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer', 'Customer Service'],
+            name: 'updateRole'
+        },
+    ]
 }
