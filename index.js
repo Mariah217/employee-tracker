@@ -1,6 +1,5 @@
 const inquirer = require("inquirer");
-const mysql = require("mysql2");
-const db = require("./config/connection")
+const db = require("./config/connection");
 require("console.table");
 
 db.connect(() => {
@@ -16,7 +15,7 @@ const menuQuestion = [
     },
 ]
 
-//function to initiate questions
+//menu function *
 function menu() {
     inquirer
         .prompt(menuQuestion)
@@ -46,8 +45,8 @@ function menu() {
         })
 }
 
-//function to view all dept's
-function viewDepartments() { //need to fix, table shows 20 dept's and there is only 5???
+//function to view all dept's *
+function viewDepartments() {
 
     db.query("select * from department", (err, data) => {
         console.table(data)
@@ -55,7 +54,7 @@ function viewDepartments() { //need to fix, table shows 20 dept's and there is o
     })
 }
 
-//function to add a dept
+//function to add a dept *
 function addDepartment() {
     db.query("select name", (err, data) => {
         const addADeptQuestion = [
@@ -75,7 +74,7 @@ function addDepartment() {
     })
 }
 
-//function to view all roles
+//function to view all roles *
 function viewRoles() {
     db.query("select * from role", (err, data) => {
         console.table(data)
@@ -83,58 +82,60 @@ function viewRoles() {
     })
 }
 
-//function to add a role
-function addRole() { //prompts questions but does not add
-    const addRoleQuestions = [
-        {
-            type: 'input',
-            message: 'What is the name of the role?',
-            name: 'addRole'
-        },
-        {
-            type: 'input',
-            message: 'What is the salary of the role?',
-            name: 'addSalary'
-        },
-        {
-            type: 'list',
-            message: 'Which department does this role belong to?',
-            choices: ['Engineering', 'Finance', 'Legal', 'Sales', 'Service'],
-            name: 'addDeptRole'
-        },
-    ]
-    inquirer.prompt(addRoleQuestions)
-        .then(response => {
-            const parameters = [response.addRole, response.addSalary, response.addDeptRole]
-            db.query("INSERT INTO role (addRole, addSalary, addDeptRole) VALUES(?,?,?)", parameters, (err, data) => {
-                viewRoles()
+//function to add a role *
+function addRole() { //prompts questions but does not add, I think I need to create a query for this
+    db.query("select * from department", (err, departmentData) => {
+        const addRoleQuestions = [
+            {
+                type: 'input',
+                message: 'What is the name of the role?',
+                name: 'addRole'
+            },
+            {
+                type: 'input',
+                message: 'What is the salary of the role?',
+                name: 'addSalary'
+            },
+            {
+                type: 'list',
+                message: 'Which department does this role belong to?',
+                choices: departmentData,
+                name: 'addDeptRole'
+            },
+        ]
+        inquirer.prompt(addRoleQuestions)
+            .then(response => {
+                const parameters = [response.addRole, response.addSalary, response.addDeptRole]
+                db.query("INSERT INTO role (addRole, addSalary, addDeptRole) VALUES(?,?,?)", parameters, (err, data) => {
+                    viewRoles()
+                })
             })
-        })
+
+    })
 }
 
-//function to view all employees
+//function to view all employees *
 function viewEmployees() {
     db.query(`
-    select * from department;
-    select * from role;
-    SELECT employee.id,
-    employee.first_name, 
-    employee.last_name
-    role.title, 
-    department.name as department, --as renames 
-    role.salary, 
-    CONCAT(mgr.first_name, " ", mgr.last_name) as manager
-    FROM employee
-    LEFT JOIN role ON  role.id=employee.role_id
-    LEFT JOIN department ON role.department_id=department.id
-    LEFT JOIN employee as mgr ON employee.manger_id = mgr.id
-    `, (err, data) => {
+SELECT 
+employee.id,
+employee.first_name,
+employee.last_name,
+role.title,
+department.name as department,
+role.salary,
+CONCAT(mgr.first_name, " " , mgr.last_name) as manager
+FROM employee
+LEFT JOIN role ON role.id= employee.role_id
+LEFT JOIN department ON role.department_id=department.id
+LEFT JOIN employee as mgr ON employee.manager_id = mgr.id
+`, (err, data) => {
         console.table(data)
         menu()
     })
 }
 
-//function to add employee
+//function to add employee *
 function addEmployee() {
     db.query("select title as name, id as value from role", (err, roleData) => {
 
@@ -159,7 +160,7 @@ function addEmployee() {
                 {
                     type: 'list',
                     message: "Who is the employee's manager?",
-                    Choices: managerData,
+                    choices: managerData,
                     name: 'manager_id'
                 }
             ]
@@ -176,18 +177,27 @@ function addEmployee() {
 
 //function to update an employee
 function updateRole() {
-    const updateEmployeeQuestions = [
-        {
-            type: 'list',
-            message: "Which employee's role do you want to update?",
-            choices: ['Hope McCrea', 'Mel Monroe', 'Jack Sheridan', 'Charmaine Roberts', 'Vernon Mullins', 'Dan Brady', 'Cameron Hayek', 'Joey Barnes'],
-            name: 'update'
-        },
-        {
-            type: 'list',
-            message: "Which role do you want to assign the selected employee?",
-            choices: ['Sales Lead', 'Salesperson', 'Lead Engineer', 'Software Engineer', 'Account Manager', 'Accountant', 'Legal Team Lead', 'Lawyer', 'Customer Service'],
-            name: 'updateRole'
-        },
-    ]
+    db.query("select * from role",  (err, updateEmployeeData) => {
+        db.query("select * from role", (err, updateRoleData) => {
+            const updateEmployeeQuestions = [
+                {
+                    type: 'list',
+                    message: "Which employee's role do you want to update?",
+                    choices: updateEmployeeData,
+                    name: 'updateEmployee'
+                },
+                {
+                    type: 'list',
+                    message: "Which role do you want to assign the selected employee?",
+                    choices: updateRoleData,
+                    name: 'updateRole'
+                },
+            ]
+            inquirer.prompt(updateEmployeeQuestions)
+            .then(response =>{
+                const parameters = [response.updateEmployee, response.updateRole]
+                db.query 
+            })
+        })
+    })
 }
