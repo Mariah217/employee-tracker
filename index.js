@@ -177,8 +177,8 @@ function addEmployee() {
 
 //function to update an employee
 function updateRole() {
-    db.query("select * from role",  (err, updateEmployeeData) => {
-        db.query("select * from role", (err, updateRoleData) => {
+    db.query("select * from employee",  (err, updateEmployeeData) => {
+        db.query("select * from employee", (err, updateRoleData) => {
             const updateEmployeeQuestions = [
                 {
                     type: 'list',
@@ -196,7 +196,9 @@ function updateRole() {
             inquirer.prompt(updateEmployeeQuestions)
             .then(response =>{
                 const parameters = [response.updateEmployee, response.updateRole]
-                db.query 
+                db.query ("UPDATE employee SET ? WHERE last_name = ?", parameter, (err,data)=>{
+                    viewEmployees()
+                })
             })
         })
     })
