@@ -138,9 +138,8 @@ LEFT JOIN employee as mgr ON employee.manager_id = mgr.id
 //function to add employee *
 function addEmployee() {
     db.query("select title as name, id as value from role", (err, roleData) => {
-
-        db.query(`select CONCAT(first_name, " ", last_name) as name, id as value from employee where manager_id is null`, (err, managerData) => {
-            const addEmployeeQuestions = [
+        db.query(`select CONCAT(first_name, " ", last_name) as name, id as value from employee`, (err, managerData) => {
+            const addEmployeeQuestions = [ 
                 {
                     type: 'input',
                     message: "What is the employee's first name?",
@@ -177,7 +176,7 @@ function addEmployee() {
 
 //function to update an employee
 function updateRole() {
-    db.query("select * from employee",  (err, updateEmployeeData) => {
+    db.query("select * from employee", (err, updateEmployeeData) => {
         db.query("select * from employee", (err, updateRoleData) => {
             const updateEmployeeQuestions = [
                 {
@@ -194,12 +193,12 @@ function updateRole() {
                 },
             ]
             inquirer.prompt(updateEmployeeQuestions)
-            .then(response =>{
-                const parameters = [response.updateEmployee, response.updateRole]
-                db.query ("UPDATE employee SET ? WHERE last_name = ?", parameter, (err,data)=>{
-                    viewEmployees()
+                .then(response => {
+                    const parameters = [response.updateEmployee, response.updateRole]
+                    db.query("UPDATE employee SET role_id=updateEmployee", parameters, (err, data) => {
+                        viewEmployees()
+                    })
                 })
-            })
         })
     })
 }

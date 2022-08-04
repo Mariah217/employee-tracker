@@ -19,13 +19,7 @@ To get started with this command line application, there are several libraries y
 
 ## Usage
 
-Provide instructions and examples for use. Include screenshots as needed.
-
-To add a screenshot, create an `assets/images` folder in your repository and upload your screenshot to it. Then, using the relative filepath, add it to your README using the following syntax:
-
-    ```md
-    ![alt text](assets/images/screenshot.png)
-    ```
+![employee tracker screenshot](./Assets/images/screenshot.PNG)
 
 ## Credits
 
