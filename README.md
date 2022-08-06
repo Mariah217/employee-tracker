@@ -19,6 +19,8 @@ To get started with this command line application, there are several libraries y
 
 ## Usage
 
+<a href = "https://youtu.be/l-EG6Y0S4Xk"> Click link for video demo</a>
+
 ![employee tracker screenshot](./Assets/images/screenshot.PNG)
 
 ## Credits
