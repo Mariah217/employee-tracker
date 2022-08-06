@@ -39,13 +39,13 @@ function menu() {
                 addRole()
             }
             else if (response.menu === "Update Employee Role") {
-                updateRole()
+                updateEmployeeRole()
             }
 
         })
 }
 
-//function to view all dept's *
+//function to view all dept's 
 function viewDepartments() {
 
     db.query("select * from department", (err, data) => {
@@ -54,7 +54,7 @@ function viewDepartments() {
     })
 }
 
-//function to add a dept *
+//function to add a dept 
 function addDepartment() {
     db.query("select name", (err, data) => {
         const addADeptQuestion = [
@@ -74,7 +74,7 @@ function addDepartment() {
     })
 }
 
-//function to view all roles *
+//function to view all roles 
 function viewRoles() {
     db.query("select * from role", (err, data) => {
         console.table(data)
@@ -82,9 +82,9 @@ function viewRoles() {
     })
 }
 
-//function to add a role *
-function addRole() { //prompts questions but does not add, I think I need to create a query for this
-    db.query("select * from department", (err, departmentData) => {
+//function to add a role 
+function addRole() { 
+    db.query("select name, id as value from department ", (err, roleData) => { //I don't think this query is correct
         const addRoleQuestions = [
             {
                 type: 'input',
@@ -96,17 +96,17 @@ function addRole() { //prompts questions but does not add, I think I need to cre
                 message: 'What is the salary of the role?',
                 name: 'addSalary'
             },
-            {
+            { //stops working at selecting department
                 type: 'list',
                 message: 'Which department does this role belong to?',
-                choices: departmentData,
+                choices: roleData,
                 name: 'addDeptRole'
             },
         ]
         inquirer.prompt(addRoleQuestions)
             .then(response => {
                 const parameters = [response.addRole, response.addSalary, response.addDeptRole]
-                db.query("INSERT INTO role (addRole, addSalary, addDeptRole) VALUES(?,?,?)", parameters, (err, data) => {
+                db.query("INSERT INTO role (title, salary, department_id) VALUES(?,?,?)", parameters, (err, data) => {
                     viewRoles()
                 })
             })
@@ -114,7 +114,7 @@ function addRole() { //prompts questions but does not add, I think I need to cre
     })
 }
 
-//function to view all employees *
+//function to view all employees 
 function viewEmployees() {
     db.query(`
 SELECT 
@@ -135,7 +135,7 @@ LEFT JOIN employee as mgr ON employee.manager_id = mgr.id
     })
 }
 
-//function to add employee *
+//function to add employee 
 function addEmployee() {
     db.query("select title as name, id as value from role", (err, roleData) => {
         db.query(`select CONCAT(first_name, " ", last_name) as name, id as value from employee`, (err, managerData) => {
@@ -174,10 +174,10 @@ function addEmployee() {
     })
 }
 
-//function to update an employee
-function updateRole() {
-    db.query("select * from employee", (err, updateEmployeeData) => {
-        db.query("select * from employee", (err, updateRoleData) => {
+//function to update an employee 
+function updateEmployeeRole() {
+    db.query("select CONCAT(first_name, ' ', last_name) as name, id as value from employee", (err, updateEmployeeData) => {
+        db.query("select title as name, id as value from role", (err, updateRoleData) => {
             const updateEmployeeQuestions = [
                 {
                     type: 'list',
@@ -194,8 +194,8 @@ function updateRole() {
             ]
             inquirer.prompt(updateEmployeeQuestions)
                 .then(response => {
-                    const parameters = [response.updateEmployee, response.updateRole]
-                    db.query("UPDATE employee SET role_id=updateEmployee", parameters, (err, data) => {
+                    const parameters = [response.updateRole, response.updateEmployee, ]
+                    db.query("UPDATE employee SET role_id=? WHERE id=?", parameters, (err, data) => {
                         viewEmployees()
                     })
                 })

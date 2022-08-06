@@ -2,7 +2,7 @@
 
 ## Description
 
-Employee Tracker is a command line application that allows you to keep track of and manage your employees, their roles, salary, department and who their manager is. You are able to view all of your employees, departments and roles and you can also add employees, department, roles and also update current employee's roles. This application makes it very simple to organize and plan your business.
+Employee Tracker is a command line application that allows you to keep track of and manage your employees, their roles, salary, department and who their manager is. You can select from the drop down: view all departments, view all roles, view all employees, add employee, add role, and update role. This application makes it very simple to organize and plan your business.
 
 ## Table of Contents (Optional)
 
@@ -15,7 +15,7 @@ If your README is long, add a table of contents to make it easy for users to fin
 
 ## Installation
 
-To get started with this command line application, there are several libraries you will need to install: console.table, dotenv, inquirer, mysql and mysql2. To install these, simply go to your terminal and type in npm i *insert library name here* and hit enter. Once everything is installed, you will open a new terminal and type in node index.js and it will display the main menu for you to select from. 
+To get started with this command line application, there are several libraries you will need to install: console.table, dotenv, inquirer, mysql and mysql2. To install these, simply go to your terminal and type in npm i (*insert library name here*) and hit enter. Once everything is installed, you will open a new terminal and type in node index.js and it will display the main menu for you to select from. 
 
 ## Usage
 
